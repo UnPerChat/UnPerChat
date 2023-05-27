@@ -41,7 +41,7 @@ def display_chain():
 # Validity checker
 @app.route("/api/v1/blocks/validity", methods=["GET"])
 def valid():
-    validity = blockchain.chain_valid(blockchain.chain)
+    validity = blockchain.chain_valid()
 
     if validity:
         response = {"message": "The blockchain is valid."}
@@ -58,3 +58,9 @@ def index():
 
 # Run flask server locally
 app.run(host="127.0.0.1", port=5000)
+
+"""
+http://127.0.0.1:5000/api/v1/blocks - View chain,
+http://127.0.0.1:5000/api/v1/blocks/validity - Chain validity,
+http://127.0.0.1:5000/api/v1/blocks/mine - Block mining
+"""

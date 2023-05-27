@@ -60,9 +60,8 @@ class Blockchain:
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
-        fail_limit = 100000
 
-        while not check_proof and new_proof < fail_limit:
+        while not check_proof:
             hash_operation = hashlib.sha256(
                 f"{(new_proof ** 2 - previous_proof ** 2)}".encode()).hexdigest()
             if hash_operation[:5] == "00000":
@@ -70,13 +69,13 @@ class Blockchain:
             else:
                 new_proof += 1
 
-        return new_proof if check_proof else None
+        return new_proof
 
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
-    def chain_valid(self, chain):
+    def chain_valid(self):
         if len(self.chain) < 2:
             return True
 
