@@ -49,7 +49,7 @@ class Blockchain:
         content = self._file_reader(filename)
         if not content:
             return
-        blocks = f"[{content}]"
+        blocks = f"{content}"
         self.chain = json.loads(blocks)
 
     # Previous block viewer

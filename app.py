@@ -10,7 +10,7 @@ blockchain = Blockchain()
 
 
 # Mining a new block
-@app.route("/api/v1/blocks/mine", methods=["POST"])
+@app.route("/api/v1/blocks/mine", methods=["GET"])
 def mine_block():
     previous_block = blockchain.print_previous_block()
     previous_proof = previous_block["proof"]
