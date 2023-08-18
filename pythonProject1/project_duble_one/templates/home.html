@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to UnPerChat</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: limegreen;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #matrix-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .code {
+            position: absolute;
+            width: 6px;
+            opacity: 0.3;
+            font-size: 18px;
+            transform: translateY(-100%);
+            animation: fall 10s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to UnPerChat</h1>
+
+    <div id="matrix-container"></div>
+
+    <br/>
+    <br/>
+    Create an account? <a href="register">Register</a>
+    <br/>
+    Login into account. <a href="login">Login</a>
+
+    <script>
+        // JavaScript code for generating the Matrix rain effect
+        const matrixContainer = document.getElementById("matrix-container");
+        const numLines = 100;
+
+        for (let i = 0; i < numLines; i++) {
+            const code = document.createElement("div");
+            code.className = "code";
+            code.textContent = "0101010101";
+            code.style.left = `${Math.random() * 100}vw`;
+            code.style.animationDelay = `${Math.random() * 10}s`;
+            matrixContainer.appendChild(code);
+        }
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <style>
+
+    body {
+      background-color: #000;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .registration-container {
+      background-color: #222;
+      border-radius: 10px;
+      padding: 20px;
+      width: 400px;
+      box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .button {
+      background-color: #00ff00;
+      border: none;
+      border-radius: 5px;
+      color: #000;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .button:hover {
+      background-color: #00cc00;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #444;
+      color: #00ff00;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="registration-container">
+    <h2>UnPerChat Join the reality!</h2>
+
+    <form action="register" method="post">
+      <label for="nickname">Nickname:</label>
+      <input type="text" id="nickname" name="nickname" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="repeat-password">Repeat Password:</label>
+      <input type="password" id="repeat-password" name="repeat-password" required>
+
+      <button class="button" type="submit">Register</button>
+    </form>
+    You have already an account? <a href="login"></a>
+    <a href="login"> Login </a>
+    <br/>
+    <a href="home"> Home </a>
+  </div>
+</body>
+</html>
