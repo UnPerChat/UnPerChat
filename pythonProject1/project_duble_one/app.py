@@ -114,7 +114,7 @@ def register_check():
         conn.commit()
         cur.close()
 
-    return render_template('login.html')
+    return render_template('profile.html')
 
 
 
@@ -132,16 +132,14 @@ def login_check():
 
 
         # Check if the user already exists
-        if user_exists(username):
+        if not user_exists(username):
             return render_template("error.html")
 
-        if email_already_logged(email):
+        if not email_already_logged(email):
             return render_template("error.html")
-
-        cur = conn.cursor()
-        cur.execute("INSERT INTO clients_info (username,email, password) VALUES (%s, %s, %s)", (username, email, hashed_password))
-        conn.commit()
-        cur.close()
+        
+        if not login_correct_password(password, username):
+            return render_template("error.html")
 
     return render_template('login.html')
 
