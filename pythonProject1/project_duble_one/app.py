@@ -4,6 +4,8 @@ from kafka import KafkaProducer
 import os
 import time
 import psycopg2
+import bcrypt
+
 import simplejson as json
 
 
@@ -15,73 +17,166 @@ app.secret_key = "UnPerChat"
 def home():
     return render_template("home.html")
 
+
 conn = psycopg2.connect(
+    dbname="clients_data",
+    user="postgres",
+    password="kristi2005",
     host="localhost",
-    port="5432",  # Default PostgreSQL port
-    database="authentication",
-    user="yourusername",
-    password="yourpassword"
+    port="5432"  # Default PostgreSQL port
 )
 
-cursor = conn.cursor()
+cur = conn.cursor()
+#
+#
+# @app.route("/register_check", methods=['GET', 'POST'])
+# def register_check():
+#     if request.method == 'POST':
+#         req = request.form
+#         req = dict(req)
+#         print(req)
+#
+#         # No need to check for existing_user using client_id
+#
+#         insert_query = """
+#             INSERT INTO clients_info (username, email, password, repeated_pass)
+#             VALUES (%s, %s, %s, %s)
+#         """
+#         insert_data = (
+#             req['username'],
+#             req['email'],
+#             req['password'],
+#             req['repeated_pass']
+#         )
+#         cur.execute(insert_query, insert_data)
+#         conn.commit()
+#
+#         return render_template("login.html")  # Or any other template
+#
+#     return render_template("register.html")
+#         #     reg_query = """
+#         #     INSERT INTO user_info (client_id, username, email, password)
+#         #     VALUES (%s, %s, %s, %S)
+#         #     """
+#         #     reg_data = (req['client_id'], req['nickname'], req['email'], req['password'])
+#         #     cur.execute(reg_query, reg_data)
+#         #     conn.commit()
+#         # else:
+#         #     return render_template("error.html")
+#
+#
 
-create_table_query = """
-CREATE TABLE IF NOT EXISTS user_info (
-    id SERIAL PRIMARY KEY,
-    nickname VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255)
-);
-"""
-cursor.execute(create_table_query)
-conn.commit()
+def user_exists(username):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM clients_info WHERE username = %s", (username,))
+    user = cur.fetchone()
+    cur.close()
+    return user is not None
 
-insert_query = """
-INSERT INTO user_info (nickname, email, password)
-VALUES (%s, %s, %s);
-"""
-user_data = ("user123", "user@example.com", "hashed_password")
-cursor.execute(insert_query, user_data)
-conn.commit()
+def email_already_logged(email):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM clients_info WHERE email = %s", (email,))
+    user = cur.fetchone()
+    cur.close()
+    return user is not None
 
-cursor.close()
-conn.close()
+def login_correct_password(password, username):
+    cur = conn.cursor()
+    cur.execute("SELECT password FROM clients_info WHERE username = %s", (username,))
+    stored_password = cur.fetchone()
+    cur.close()
+
+    if stored_password:
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password[0]):
+            return True
+
+    return False
 
 
-@app.route("/register_check", methods=['GET', 'POST'])
+@app.route('/register_check', methods=['GET', 'POST'])
 def register_check():
-    return render_template("register.html")
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+
+        password = request.form['password']
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        # Check if the user already exists
+        if user_exists(username):
+            return render_template("error.html")
+
+        if email_already_logged(email):
+            return render_template("error.html")
+
+        cur = conn.cursor()
+        cur.execute("INSERT INTO clients_info (username,email, password) VALUES (%s, %s, %s)", (username, email, hashed_password))
+        conn.commit()
+        cur.close()
+
+    return render_template('login.html')
+
+
+
+
+
+@app.route('/register_check', methods=['GET', 'POST'])
+def login_check():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+
+            # Retrieve the hashed password from the database based on the username
+
+
+        # Check if the user already exists
+        if user_exists(username):
+            return render_template("error.html")
+
+        if email_already_logged(email):
+            return render_template("error.html")
+
+        cur = conn.cursor()
+        cur.execute("INSERT INTO clients_info (username,email, password) VALUES (%s, %s, %s)", (username, email, hashed_password))
+        conn.commit()
+        cur.close()
+
+    return render_template('login.html')
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        # Process the form data, validate, and save to the database
-        nickname = request.form.get('nickname')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        # Perform validation and database operations here
-
-        return "Registration successful!"
-
     return render_template("register.html")
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        # Process the login form data, validate, and authenticate the user
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        # Perform authentication and validation here
-        # If authentication succeeds, redirect the user to a dashboard or other page
-
-        return "Login successful!"
-
     return render_template("login.html")
+
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboard():
+    return render_template("dashboard.html")
+
+@app.route("/error", methods=["GET", "POST"])
+def error():
+    return render_template("error.html")
+
 
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
+

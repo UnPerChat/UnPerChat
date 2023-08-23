@@ -1,20 +1,31 @@
-import psycopg2
 
-#establishing the connection
-conn = psycopg2.connect(
-   database="postgres", user='postgres', password='password', host='127.0.0.1', port= '5432'
-)
-conn.autocommit = True
 
-#Creating a cursor object using the cursor() method
-cursor = conn.cursor()
+myclient = pymongo.MongoClient("mongodb://lovalhost:27017/")
+user_db = myclient["authentication"]
+user_table = user_db["user_info"]
 
-#Preparing query to create a database
-sql = '''CREATE database mydb'''
+@app.route("/register_check", methods=['GET', 'POST'])
+def register_check():
+    if request.method == 'POST':
+        req = request.form
+        req = dict(req)
+        print(req)
+        query = user_table.find({'uid': req['uid']})
+        flag = 0
+        for x in query:
+            if x['uid'] == req['uid']:
+                flag = 1
+                break
 
-#Creating a database
-cursor.execute(sql)
-print("Database created successfully........")
+        reg_dict = {
+            'uid': req['uid'],
+            'email': req['email'],
+            'password': req['passowrd'],
+        }
+        if flag == 0:
+            temp = user_table.insert(reg_dict)
+        else:
+            return render_template("dashboard.html")
 
-#Closing the connection
-conn.close()
+    return render_template("register.html")
+
