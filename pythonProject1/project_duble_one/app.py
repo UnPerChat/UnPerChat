@@ -114,13 +114,13 @@ def register_check():
         conn.commit()
         cur.close()
 
-    return render_template('profile.html')
+    return render_template('login.html')
 
 
 
 
 
-@app.route('/register_check', methods=['GET', 'POST'])
+@app.route('/login_check', methods=['GET', 'POST'])
 def login_check():
     if request.method == 'POST':
         username = request.form['username']
@@ -141,7 +141,7 @@ def login_check():
         if not login_correct_password(password, username):
             return render_template("error.html")
 
-    return render_template('login.html')
+    return render_template('profile.html')
 
 
 
