@@ -16,6 +16,14 @@ def home():
     return render_template("home.html")
 
 
+@app.route('/')
+@app.route("/profile_page")
+def profile_page():
+    return render_template("profile_page.html")
+
+
+
+
 conn = psycopg2.connect(
     dbname="clients_data",
     user="postgres",
@@ -78,17 +86,16 @@ def email_already_logged(email):
     cur.close()
     return user is not None
 
-def login_correct_password(password, username):
+def login_correct_password(password, email):
     cur = conn.cursor()
-    cur.execute("SELECT password FROM clients_info WHERE username = %s", (username,))
+    cur.execute("SELECT password FROM clients_info WHERE email = %s", (email,))
     stored_password = cur.fetchone()
     cur.close()
 
-    if stored_password:
-        if bcrypt.checkpw(password.encode('utf-8'), stored_password[0]):
-            return True
-
-    return False
+    if bcrypt.checkpw(stored_password[0].encode('utf-8'), password.encode('utf-8')):
+        print("Yes")
+    else:
+        print("No")
 
 
 @app.route('/register_check', methods=['GET', 'POST'])
@@ -99,6 +106,7 @@ def register_check():
 
         password = request.form['password']
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        print(hashed_password)
 
         # Check if the user already exists
         if user_exists(username):
@@ -136,10 +144,10 @@ def login_check():
         if not email_already_logged(email):
             return render_template("error.html")
         
-        if not login_correct_password(password, username):
+        if not login_correct_password(password, email):
             return render_template("error.html")
 
-    return render_template('profile.html')
+    return render_template('profile_page.html')
 
 
 

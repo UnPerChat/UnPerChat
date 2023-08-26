@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Profile</title>
+    <title>Profile Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,37 +12,41 @@
             background-color: #f4f4f4;
         }
         .profile-container {
-            max-width: 800px;
-            margin: 20px auto;
+            max-width: 600px;
+            margin: 50px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
         .profile-picture {
-            max-width: 200px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
         }
         .profile-info {
-            margin-top: 20px;
+            text-align: center;
         }
-        .profile-info h1 {
-            margin: 0;
-        }
-        .profile-info p {
+        .profile-name {
+            font-size: 24px;
             margin: 10px 0;
+        }
+        .profile-email {
+            font-size: 18px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="profile-container">
-        <img class="profile-picture" src="profile-picture.jpg" alt="Profile Picture">
+        <img class="profile-picture" src="profile_picture.jpg" alt="Profile Picture">
         <div class="profile-info">
-            <h1>Your Name</h1>
-            <p>Location: City, Country</p>
-            <p>Email: your@email.com</p>
-            <p>Website: <a href="https://www.example.com">www.example.com</a></p>
-            <p>About Me: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget neque vel purus pretium consequat.</p>
+            <div class="profile-name">John Doe</div>
+            <div class="profile-email">john.doe@example.com</div>
+            <button>Edit Profile</button>
         </div>
     </div>
 </body>
