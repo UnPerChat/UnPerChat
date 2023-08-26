@@ -1,6 +1,4 @@
 from flask import Flask, render_template, url_for, request, redirect
-from kafka import KafkaConsumer
-from kafka import KafkaProducer
 import os
 import time
 import psycopg2
