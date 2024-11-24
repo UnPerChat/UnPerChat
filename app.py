@@ -39,6 +39,15 @@ def display_chain():
 
 
 # Validity checker
+@app.route("/api/v1/blocks/validity", methods=["GET"])
+def valid():
+    validity = blockchain.chain_valid()
+
+    if validity:
+        response = {"message": "The blockchain is valid."}
+    else:
+        response = {"message": "The blockchain is invalid"}
+    return jsonify(response), 200
 
 
 # Default route. Redirects to the blockchain
@@ -55,5 +64,3 @@ http://127.0.0.1:5000/api/v1/blocks - View chain,
 http://127.0.0.1:5000/api/v1/blocks/validity - Chain validity,
 http://127.0.0.1:5000/api/v1/blocks/mine - Block mining
 """
-
-print("hello")
